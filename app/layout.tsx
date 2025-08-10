@@ -43,21 +43,28 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body>
         {children}
 
-        {/* GA4 bootstrap */}
-        {process.env.NEXT_PUBLIC_GA_ID && (
+       import Plausible from '@/components/Plausible'
+
+export const metadata = {
+  // … your existing metadata (keep og/tweet images)
+}
+
+export default function RootLayout({ children }: { children: React.ReactNode }) {
+  const domain = process.env.NEXT_PUBLIC_PLAUSIBLE_DOMAIN
+  return (
+    <html lang="en">
+      <body>
+        {children}
+
+        {/* Plausible */}
+        {domain && (
           <>
-            <script async src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GA_ID}`} />
             <script
-              dangerouslySetInnerHTML={{
-                __html: `
-                  window.dataLayer = window.dataLayer || [];
-                  function gtag(){dataLayer.push(arguments);}
-                  gtag('js', new Date());
-                  gtag('config', '${process.env.NEXT_PUBLIC_GA_ID}');
-                `,
-              }}
+              defer
+              data-domain={domain}
+              src="https://plausible.io/js/script.js"
             />
-            <Analytics />
+            <Plausible />
           </>
         )}
       </body>
